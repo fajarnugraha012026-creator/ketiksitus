@@ -7,44 +7,38 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <style>
         :root { --bg:#f8f9fa; --card:#fff; --text:#202124; --accent:#1a73e8; --border:#dadce0; --danger:#d93025; }
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; font-family: 'Verdana', sans-serif; }
-        body { background: var(--bg); color: var(--text); min-height: 100vh; }
-        
-        header { background: white; padding: 1rem 2rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 1.5rem; font-weight: bold; color: var(--accent); font-style: italic; }
-        .btn { padding: 8px 16px; border-radius: 4px; cursor: pointer; border: 1px solid var(--border); background: white; transition: 0.2s; }
-        .btn:hover { background: #f1f3f4; }
-        .btn-danger { color: var(--danger); border-color: var(--danger); }
-        .btn-danger:hover { background: var(--danger); color: white; }
-        .btn-primary { background: var(--accent); color: white; border: none; }
-        .btn-primary:hover { opacity: 0.9; }
-
-        main { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
-        .tabs { display: flex; gap: 1rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; overflow-x: auto; }
-        .tab-btn { padding: 10px 20px; background: transparent; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-weight: bold; color: #5f6368; white-space: nowrap; }
-        .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
-        
-        .tab-content { display: none; animation: fadeIn 0.3s; }
-        .tab-content.active { display: block; }
-        
-        .add-form { background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 2rem; }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
-        @media(max-width:600px) { .form-row { grid-template-columns: 1fr; } }
-        
-        label { display: block; font-size: 0.8rem; color: #5f6368; margin-bottom: 0.5rem; }
-        input, textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; }
-        
-        /* DRAG LIST */
-        .sortable-list { list-style: none; }
-        .sortable-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 1rem; cursor: grab; transition: box-shadow 0.2s; }
-        .sortable-item.sortable-ghost { opacity: 0.4; background: #e8f0fe; border-color: var(--accent); }
-        .drag-handle { color: #9aa0a6; font-size: 1.5rem; cursor: grab; user-select: none; }
-        .item-info { flex: 1; overflow: hidden; }
-        .item-title { font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .item-sub { font-size: 0.8rem; color: #5f6368; margin-top: 4px; }
-
-        .actions-bar { display: flex; gap: 1rem; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        * { box-sizing:border-box; margin:0; padding:0; outline:none; font-family:'Verdana',sans-serif; }
+        body { background:var(--bg); color:var(--text); min-height:100vh; }
+        header { background:white; padding:1rem 2rem; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:100; }
+        .logo { font-size:1.5rem; font-weight:bold; color:var(--accent); font-style:italic; }
+        .btn { padding:8px 16px; border-radius:4px; cursor:pointer; border:1px solid var(--border); background:white; transition:0.2s; font-size:0.9rem; }
+        .btn:hover { background:#f1f3f4; }
+        .btn-danger { color:var(--danger); border-color:var(--danger); }
+        .btn-danger:hover { background:var(--danger); color:white; }
+        .btn-primary { background:var(--accent); color:white; border:none; }
+        .btn-primary:hover { opacity:0.9; }
+        main { max-width:900px; margin:2rem auto; padding:0 1rem; }
+        .tabs { display:flex; gap:1rem; border-bottom:1px solid var(--border); margin-bottom:2rem; overflow-x:auto; scrollbar-width:none; }
+        .tabs::-webkit-scrollbar { display:none; }
+        .tab-btn { padding:10px 20px; background:transparent; border:none; border-bottom:3px solid transparent; cursor:pointer; font-weight:bold; color:#5f6368; white-space:nowrap; transition:0.2s; }
+        .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
+        .tab-content { display:none; animation:fadeIn 0.3s; }
+        .tab-content.active { display:block; }
+        .add-form { background:white; padding:1.5rem; border-radius:8px; border:1px solid var(--border); margin-bottom:2rem; }
+        .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem; }
+        @media(max-width:600px){ .form-row{grid-template-columns:1fr;} }
+        label { display:block; font-size:0.8rem; color:#5f6368; margin-bottom:0.5rem; }
+        input, textarea { width:100%; padding:10px; border:1px solid var(--border); border-radius:4px; font-family:inherit; transition:border 0.2s; }
+        input:focus, textarea:focus { border-color:var(--accent); }
+        .sortable-list { list-style:none; }
+        .sortable-item { background:white; border:1px solid var(--border); border-radius:8px; padding:1rem; margin-bottom:0.8rem; display:flex; align-items:center; gap:1rem; cursor:grab; transition:box-shadow 0.2s; }
+        .sortable-item.sortable-ghost { opacity:0.4; background:#e8f0fe; border-color:var(--accent); }
+        .drag-handle { color:#9aa0a6; font-size:1.5rem; cursor:grab; user-select:none; padding-right:0.5rem; }
+        .item-info { flex:1; overflow:hidden; }
+        .item-title { font-weight:bold; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .item-sub { font-size:0.8rem; color:#5f6368; margin-top:4px; word-break:break-all; }
+        .actions-bar { display:flex; gap:1rem; margin-top:2rem; padding-top:1rem; border-top:1px solid var(--border); flex-wrap:wrap; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
     </style>
 </head>
 <body>
@@ -52,7 +46,6 @@
         <div class="logo">KetikSitus Admin</div>
         <button class="btn btn-danger" onclick="logout()">Keluar</button>
     </header>
-
     <main>
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('semua')">Tab Semua</button>
@@ -110,167 +103,141 @@
 
         <div class="actions-bar">
             <button class="btn btn-primary" onclick="downloadDB()">⬇️ Download database.json</button>
-            <button class="btn" onclick="resetToDefault()">🔄 Reset ke Default</button>
+            <button class="btn" onclick="resetToDefault()"> Reset ke Default</button>
         </div>
     </main>
 
     <script>
-        if (localStorage.getItem('ks_admin_auth') !== 'true') window.location.href = 'login.html';
+        if(localStorage.getItem('ks_auth')!=='true') window.location.href='login.html';
+        const DB_KEY='ketiksitus_db_v3';
+        let db={semua:[],berita:[],gambar:[]};
+        let sortables={};
 
-        const DB_KEY = 'ketiksitus_db_v2';
-        let db = { semua: [], berita: [], gambar: [] };
-        let sortables = {};
+        window.onload=async function(){ await loadDB(); initSortable(); };
 
-        window.onload = async function() {
-            await loadDB();
-            initSortable();
-        };
-
-        async function loadDB() {
-            const stored = localStorage.getItem(DB_KEY);
-            if (stored) {
-                db = JSON.parse(stored);
-            } else {
+        async function loadDB(){
+            const stored=localStorage.getItem(DB_KEY);
+            if(stored) db=JSON.parse(stored);
+            else {
                 try {
-                    const res = await fetch('database.json');
-                    if(res.ok) db = await res.json();
-                } catch(e) {}
+                    const res=await fetch('database.json');
+                    if(res.ok) db=await res.json();
+                } catch(e){}
                 saveDB();
             }
             renderAllLists();
         }
 
-        function saveDB() {
-            localStorage.setItem(DB_KEY, JSON.stringify(db));
-        }
+        function saveDB(){ localStorage.setItem(DB_KEY,JSON.stringify(db)); }
 
-        function logout() {
-            localStorage.removeItem('ks_admin_auth');
-            window.location.href = 'login.html';
-        }
+        function logout(){ localStorage.removeItem('ks_auth'); window.location.href='login.html'; }
 
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        function switchTab(tab){
+            document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
             event.target.classList.add('active');
             document.getElementById(`tab-${tab}`).classList.add('active');
         }
 
-        function renderAllLists() {
-            renderList('semua', db.semua, item => `
+        function renderAllLists(){
+            renderList('semua',db.semua,item=>`
                 <div class="drag-handle">⋮</div>
-                <img src="${item.favicon || 'https://via.placeholder.com/32'}" style="width:32px;height:32px;border-radius:4px;">
-                <div class="item-info">
-                    <div class="item-title">${item.title}</div>
-                    <div class="item-sub">${item.url}</div>
-                </div>
-                <button class="btn btn-danger" style="padding:4px 8px;font-size:0.7rem;" onclick="deleteItem('semua', ${item.id})">Hapus</button>
+                <img src="${item.favicon||'https://via.placeholder.com/32'}" style="width:32px;height:32px;border-radius:4px;">
+                <div class="item-info"><div class="item-title">${item.title}</div><div class="item-sub">${item.url}</div></div>
+                <button class="btn btn-danger" style="padding:4px 8px;font-size:0.7rem;" onclick="deleteItem('semua',${item.id})">Hapus</button>
             `);
-
-            renderList('berita', db.berita, item => `
+            renderList('berita',db.berita,item=>`
                 <div class="drag-handle">⋮</div>
                 <img src="${item.thumb}" style="width:60px;height:60px;border-radius:4px;object-fit:cover;">
-                <div class="item-info">
-                    <div class="item-sub" style="color:var(--accent);font-weight:bold;">${item.category}</div>
-                    <div class="item-title">${item.title}</div>
-                </div>
-                <button class="btn btn-danger" style="padding:4px 8px;font-size:0.7rem;" onclick="deleteItem('berita', ${item.id})">Hapus</button>
+                <div class="item-info"><div class="item-sub" style="color:var(--accent);font-weight:bold;">${item.category}</div><div class="item-title">${item.title}</div></div>
+                <button class="btn btn-danger" style="padding:4px 8px;font-size:0.7rem;" onclick="deleteItem('berita',${item.id})">Hapus</button>
             `);
-
-            renderList('gambar', db.gambar, item => `
+            renderList('gambar',db.gambar,item=>`
                 <div class="drag-handle">⋮⋮</div>
                 <img src="${item.img}" style="width:80px;height:50px;border-radius:4px;object-fit:cover;">
-                <div class="item-info">
-                    <div class="item-title">${item.title}</div>
-                    <div class="item-sub">${item.source}</div>
-                </div>
-                <button class="btn btn-danger" style="padding:4px 8px;font-size:0.7rem;" onclick="deleteItem('gambar', ${item.id})">Hapus</button>
+                <div class="item-info"><div class="item-title">${item.title}</div><div class="item-sub">${item.source}</div></div>
+                <button class="btn btn-danger" style="padding:4px 8px;font-size:0.7rem;" onclick="deleteItem('gambar',${item.id})">Hapus</button>
             `);
         }
 
-        function renderList(type, data, templateFn) {
-            const list = document.getElementById(`list-${type}`);
-            list.innerHTML = '';
-            data.forEach(item => {
-                const li = document.createElement('li');
-                li.className = 'sortable-item';
-                li.dataset.id = item.id;
-                li.innerHTML = templateFn(item);
+        function renderList(type,data,templateFn){
+            const list=document.getElementById(`list-${type}`);
+            list.innerHTML='';
+            data.forEach(item=>{
+                const li=document.createElement('li');
+                li.className='sortable-item';
+                li.dataset.id=item.id;
+                li.innerHTML=templateFn(item);
                 list.appendChild(li);
             });
         }
 
-        function initSortable() {
-            ['semua', 'berita', 'gambar'].forEach(type => {
-                sortables[type] = new Sortable(document.getElementById(`list-${type}`), {
-                    animation: 150, ghostClass: 'sortable-ghost', handle: '.drag-handle',
-                    onEnd: function(evt) {
-                        const items = Array.from(evt.to.children).map(el => {
-                            const id = parseInt(el.dataset.id);
-                            return db[type].find(i => i.id === id);
+        function initSortable(){
+            ['semua','berita','gambar'].forEach(type=>{
+                sortables[type]=new Sortable(document.getElementById(`list-${type}`),{
+                    animation:150, ghostClass:'sortable-ghost', handle:'.drag-handle',
+                    onEnd:function(evt){
+                        const items=Array.from(evt.to.children).map(el=>{
+                            const id=parseInt(el.dataset.id);
+                            return db[type].find(i=>i.id===id);
                         }).filter(Boolean);
-                        db[type] = items;
+                        db[type]=items;
                         saveDB();
                     }
                 });
             });
         }
 
-        function addItem(type) {
-            const newItem = { id: Date.now() };
-            if (type === 'semua') {
-                newItem.title = document.getElementById('s-title').value;
-                newItem.url = document.getElementById('s-url').value;
-                newItem.desc = document.getElementById('s-desc').value;
-                newItem.favicon = document.getElementById('s-fav').value || 'https://via.placeholder.com/32';
-                if(!newItem.title || !newItem.url) return alert('Judul & URL wajib!');
-            } else if (type === 'berita') {
-                newItem.category = document.getElementById('b-cat').value;
-                newItem.title = document.getElementById('b-title').value;
-                newItem.desc = document.getElementById('b-desc').value;
-                newItem.thumb = document.getElementById('b-thumb').value || 'https://via.placeholder.com/150';
+        function addItem(type){
+            const newItem={id:Date.now()};
+            if(type==='semua'){
+                newItem.title=document.getElementById('s-title').value.trim();
+                newItem.url=document.getElementById('s-url').value.trim();
+                newItem.desc=document.getElementById('s-desc').value.trim();
+                newItem.favicon=document.getElementById('s-fav').value.trim()||'https://via.placeholder.com/32';
+                if(!newItem.title||!newItem.url) return alert('Judul & URL wajib!');
+            } else if(type==='berita'){
+                newItem.category=document.getElementById('b-cat').value.trim();
+                newItem.title=document.getElementById('b-title').value.trim();
+                newItem.desc=document.getElementById('b-desc').value.trim();
+                newItem.thumb=document.getElementById('b-thumb').value.trim()||'https://via.placeholder.com/150';
                 if(!newItem.title) return alert('Judul wajib!');
-            } else if (type === 'gambar') {
-                newItem.title = document.getElementById('g-title').value;
-                newItem.source = document.getElementById('g-source').value;
-                newItem.img = document.getElementById('g-img').value || 'https://via.placeholder.com/300x200';
+            } else if(type==='gambar'){
+                newItem.title=document.getElementById('g-title').value.trim();
+                newItem.source=document.getElementById('g-source').value.trim();
+                newItem.img=document.getElementById('g-img').value.trim()||'https://via.placeholder.com/300x200';
                 if(!newItem.title) return alert('Judul wajib!');
             }
-
             db[type].unshift(newItem);
             saveDB();
             renderAllLists();
-            document.querySelectorAll(`#tab-${type} input, #tab-${type} textarea`).forEach(i => i.value = '');
+            document.querySelectorAll(`#tab-${type} input, #tab-${type} textarea`).forEach(i=>i.value='');
         }
 
-        function deleteItem(type, id) {
-            if(confirm('Hapus data ini?')) {
-                db[type] = db[type].filter(i => i.id !== id);
+        function deleteItem(type,id){
+            if(confirm('Hapus data ini permanen?')){
+                db[type]=db[type].filter(i=>i.id!==id);
                 saveDB();
                 renderAllLists();
             }
         }
 
-        function resetToDefault() {
-            if(confirm('Reset semua data ke default?')) {
+        function resetToDefault(){
+            if(confirm('Reset semua data ke default dari database.json?')){
                 localStorage.removeItem(DB_KEY);
                 location.reload();
             }
         }
 
-        // FITUR DOWNLOAD JSON UNTUK GITHUB
-        function downloadDB() {
-            const dataStr = JSON.stringify(db, null, 2);
-            const blob = new Blob([dataStr], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'database.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            alert('File database.json berhasil didownload!\nSilakan upload file ini ke repository GitHub Anda.');
+        function downloadDB(){
+            const dataStr=JSON.stringify(db,null,2);
+            const blob=new Blob([dataStr],{type:"application/json"});
+            const url=URL.createObjectURL(blob);
+            const a=document.createElement('a');
+            a.href=url; a.download='database.json';
+            document.body.appendChild(a); a.click();
+            document.body.removeChild(a); URL.revokeObjectURL(url);
+            alert('✅ database.json berhasil didownload!\nSilakan upload file ini ke repository GitHub Anda untuk update website.');
         }
     </script>
 </body>
