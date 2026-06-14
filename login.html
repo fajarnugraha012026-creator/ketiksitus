@@ -5,57 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Admin - KetikSitus</title>
     <style>
-        :root { --bg:#ffffff; --card:#ffffff; --text:#202124; --accent:#1a73e8; --border:#dadce0; }
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-        body { background: var(--bg); color: var(--text); font-family: 'Verdana', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-        
-        .login-container { width: 100%; max-width: 400px; padding: 2rem; text-align: center; }
-        .logo { font-size: 2.5rem; font-weight: bold; color: var(--accent); margin-bottom: 2rem; font-style: italic; }
-        
-        .form-group { margin-bottom: 1.5rem; text-align: left; }
-        label { display: block; font-size: 0.8rem; color: #5f6368; margin-bottom: 0.5rem; }
-        input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; transition: border 0.2s; }
-        input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(26,115,232,0.2); }
-        
-        .btn-login { width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 4px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 1rem; }
-        .btn-login:hover { background: #1557b0; }
-        .error-msg { color: #d93025; font-size: 0.85rem; margin-top: 1rem; display: none; }
+        :root { --bg:#fff; --text:#202124; --accent:#1a73e8; --border:#dadce0; }
+        * { box-sizing:border-box; margin:0; padding:0; outline:none; font-family:'Verdana',sans-serif; }
+        body { background:var(--bg); color:var(--text); min-height:100vh; display:flex; align-items:center; justify-content:center; }
+        .container { width:100%; max-width:400px; padding:2rem; text-align:center; }
+        .logo { font-size:2.5rem; font-weight:bold; color:var(--accent); font-style:italic; margin-bottom:2rem; }
+        .form-group { margin-bottom:1.5rem; text-align:left; }
+        label { display:block; font-size:0.8rem; color:#5f6368; margin-bottom:0.5rem; }
+        input { width:100%; padding:12px; border:1px solid var(--border); border-radius:4px; font-size:1rem; transition:border 0.2s; }
+        input:focus { border-color:var(--accent); box-shadow:0 0 0 2px rgba(26,115,232,0.2); }
+        .btn { width:100%; padding:12px; background:var(--accent); color:white; border:none; border-radius:4px; font-size:1rem; font-weight:bold; cursor:pointer; }
+        .btn:hover { opacity:0.9; }
+        .error { color:#d93025; font-size:0.85rem; margin-top:1rem; display:none; animation:shake 0.3s; }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
     </style>
 </head>
 <body>
-    <div class="login-container">
+    <div class="container">
         <div class="logo">KetikSitus</div>
         <div class="form-group">
             <label>Username</label>
-            <input type="text" id="username" placeholder="admin">
+            <input type="text" id="username" placeholder="admin" autocomplete="off">
         </div>
         <div class="form-group">
             <label>Password</label>
             <input type="password" id="password" placeholder="••••••">
         </div>
-        <button class="btn-login" onclick="handleLogin()">Masuk</button>
-        <div class="error-msg" id="errorMsg">Username atau password salah!</div>
+        <button class="btn" onclick="handleLogin()">Masuk Dashboard</button>
+        <div class="error" id="errorMsg">Username atau password salah!</div>
     </div>
-
     <script>
-        function handleLogin() {
-            const u = document.getElementById('username').value;
-            const p = document.getElementById('password').value;
-            
-            if (u === 'admin' && p === 'admin') {
-                localStorage.setItem('ks_admin_auth', 'true');
-                window.location.href = 'admin.html';
+        if(localStorage.getItem('ks_auth')==='true') window.location.href='admin.html';
+        function handleLogin(){
+            const u=document.getElementById('username').value.trim();
+            const p=document.getElementById('password').value.trim();
+            if(u==='admin' && p==='admin'){
+                localStorage.setItem('ks_auth','true');
+                window.location.href='admin.html';
             } else {
-                const err = document.getElementById('errorMsg');
-                err.style.display = 'block';
-                setTimeout(() => err.style.display = 'none', 3000);
+                const e=document.getElementById('errorMsg');
+                e.style.display='block';
+                setTimeout(()=>e.style.display='none',3000);
             }
         }
-
-        // Cek jika sudah login, langsung redirect
-        if (localStorage.getItem('ks_admin_auth') === 'true') {
-            window.location.href = 'admin.html';
-        }
+        document.getElementById('password').addEventListener('keydown',e=>{if(e.key==='Enter')handleLogin()});
     </script>
 </body>
 </html>
