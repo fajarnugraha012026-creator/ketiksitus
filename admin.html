@@ -4,22 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - KetikSitus</title>
-    <!-- SortableJS untuk Drag & Drop -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <style>
-        :root { --bg:#f8f9fa; --card:#ffffff; --text:#202124; --accent:#1a73e8; --border:#dadce0; --danger:#d93025; }
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-        body { background: var(--bg); color: var(--text); font-family: 'Verdana', sans-serif; min-height: 100vh; }
+        :root { --bg:#f8f9fa; --card:#fff; --text:#202124; --accent:#1a73e8; --border:#dadce0; --danger:#d93025; }
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; font-family: 'Verdana', sans-serif; }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; }
         
         header { background: white; padding: 1rem 2rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .logo { font-size: 1.5rem; font-weight: bold; color: var(--accent); font-style: italic; }
-        .logout-btn { background: transparent; border: 1px solid var(--border); padding: 8px 16px; border-radius: 4px; cursor: pointer; color: #5f6368; }
-        .logout-btn:hover { background: #f1f3f4; }
+        .btn { padding: 8px 16px; border-radius: 4px; cursor: pointer; border: 1px solid var(--border); background: white; transition: 0.2s; }
+        .btn:hover { background: #f1f3f4; }
+        .btn-danger { color: var(--danger); border-color: var(--danger); }
+        .btn-danger:hover { background: var(--danger); color: white; }
+        .btn-primary { background: var(--accent); color: white; border: none; }
+        .btn-primary:hover { opacity: 0.9; }
 
-        main { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
-        
-        .tabs { display: flex; gap: 1rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
-        .tab-btn { padding: 10px 20px; background: transparent; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-weight: bold; color: #5f6368; font-family: inherit; }
+        main { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+        .tabs { display: flex; gap: 1rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; overflow-x: auto; }
+        .tab-btn { padding: 10px 20px; background: transparent; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-weight: bold; color: #5f6368; white-space: nowrap; }
         .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
         
         .tab-content { display: none; animation: fadeIn 0.3s; }
@@ -30,34 +32,25 @@
         @media(max-width:600px) { .form-row { grid-template-columns: 1fr; } }
         
         label { display: block; font-size: 0.8rem; color: #5f6368; margin-bottom: 0.5rem; }
-        input, textarea, select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; }
-        .btn-add { background: var(--accent); color: white; border: none; padding: 10px 24px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 1rem; }
+        input, textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; }
         
-        /* DRAG AND DROP LIST STYLES */
+        /* DRAG LIST */
         .sortable-list { list-style: none; }
-        .sortable-item { 
-            background: white; border: 1px solid var(--border); border-radius: 8px; 
-            padding: 1rem; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 1rem;
-            cursor: grab; transition: box-shadow 0.2s;
-        }
-        .sortable-item:active { cursor: grabbing; }
+        .sortable-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 1rem; cursor: grab; transition: box-shadow 0.2s; }
         .sortable-item.sortable-ghost { opacity: 0.4; background: #e8f0fe; border-color: var(--accent); }
-        .drag-handle { color: #9aa0a6; font-size: 1.5rem; cursor: grab; padding-right: 1rem; }
-        
-        .item-info { flex: 1; }
-        .item-title { font-weight: bold; margin-bottom: 4px; }
-        .item-sub { font-size: 0.8rem; color: #5f6368; }
-        
-        .delete-btn { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
-        .delete-btn:hover { background: var(--danger); color: white; }
+        .drag-handle { color: #9aa0a6; font-size: 1.5rem; cursor: grab; user-select: none; }
+        .item-info { flex: 1; overflow: hidden; }
+        .item-title { font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .item-sub { font-size: 0.8rem; color: #5f6368; margin-top: 4px; }
 
+        .actions-bar { display: flex; gap: 1rem; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
     <header>
         <div class="logo">KetikSitus Admin</div>
-        <button class="logout-btn" onclick="logout()">Keluar</button>
+        <button class="btn btn-danger" onclick="logout()">Keluar</button>
     </header>
 
     <main>
@@ -77,9 +70,9 @@
                 </div>
                 <div class="form-row">
                     <div><label>Deskripsi</label><textarea id="s-desc" rows="2"></textarea></div>
-                    <div><label>Favicon URL</label><input type="text" id="s-fav" placeholder="https://..."></div>
+                    <div><label>Favicon URL</label><input type="text" id="s-fav"></div>
                 </div>
-                <button class="btn-add" onclick="addItem('semua')">+ Tambah</button>
+                <button class="btn btn-primary" onclick="addItem('semua')">+ Tambah</button>
             </div>
             <ul id="list-semua" class="sortable-list"></ul>
         </div>
@@ -89,14 +82,14 @@
             <div class="add-form">
                 <h3 style="margin-bottom:1rem;">Tambah Data "Berita"</h3>
                 <div class="form-row">
-                    <div><label>Kategori/Label</label><input type="text" id="b-cat"></div>
+                    <div><label>Kategori</label><input type="text" id="b-cat"></div>
                     <div><label>Judul</label><input type="text" id="b-title"></div>
                 </div>
                 <div class="form-row">
                     <div><label>Deskripsi</label><textarea id="b-desc" rows="2"></textarea></div>
                     <div><label>Thumbnail URL</label><input type="text" id="b-thumb"></div>
                 </div>
-                <button class="btn-add" onclick="addItem('berita')">+ Tambah</button>
+                <button class="btn btn-primary" onclick="addItem('berita')">+ Tambah</button>
             </div>
             <ul id="list-berita" class="sortable-list"></ul>
         </div>
@@ -107,24 +100,27 @@
                 <h3 style="margin-bottom:1rem;">Tambah Data "Gambar"</h3>
                 <div class="form-row">
                     <div><label>Judul Gambar</label><input type="text" id="g-title"></div>
-                    <div><label>Sumber/URL Asal</label><input type="text" id="g-source"></div>
+                    <div><label>Sumber</label><input type="text" id="g-source"></div>
                 </div>
                 <div><label>URL Gambar</label><input type="text" id="g-img"></div>
-                <button class="btn-add" onclick="addItem('gambar')">+ Tambah</button>
+                <button class="btn btn-primary" onclick="addItem('gambar')">+ Tambah</button>
             </div>
             <ul id="list-gambar" class="sortable-list"></ul>
+        </div>
+
+        <div class="actions-bar">
+            <button class="btn btn-primary" onclick="downloadDB()">⬇️ Download database.json</button>
+            <button class="btn" onclick="resetToDefault()">🔄 Reset ke Default</button>
         </div>
     </main>
 
     <script>
-        // AUTH CHECK
         if (localStorage.getItem('ks_admin_auth') !== 'true') window.location.href = 'login.html';
 
         const DB_KEY = 'ketiksitus_db_v2';
         let db = { semua: [], berita: [], gambar: [] };
         let sortables = {};
 
-        // INIT
         window.onload = async function() {
             await loadDB();
             initSortable();
@@ -160,16 +156,15 @@
             document.getElementById(`tab-${tab}`).classList.add('active');
         }
 
-        // RENDER LISTS
         function renderAllLists() {
             renderList('semua', db.semua, item => `
-                <div class="drag-handle">⋮⋮</div>
+                <div class="drag-handle">⋮</div>
                 <img src="${item.favicon || 'https://via.placeholder.com/32'}" style="width:32px;height:32px;border-radius:4px;">
                 <div class="item-info">
                     <div class="item-title">${item.title}</div>
                     <div class="item-sub">${item.url}</div>
                 </div>
-                <button class="delete-btn" onclick="deleteItem('semua', ${item.id})">Hapus</button>
+                <button class="btn btn-danger" style="padding:4px 8px;font-size:0.7rem;" onclick="deleteItem('semua', ${item.id})">Hapus</button>
             `);
 
             renderList('berita', db.berita, item => `
@@ -179,7 +174,7 @@
                     <div class="item-sub" style="color:var(--accent);font-weight:bold;">${item.category}</div>
                     <div class="item-title">${item.title}</div>
                 </div>
-                <button class="delete-btn" onclick="deleteItem('berita', ${item.id})">Hapus</button>
+                <button class="btn btn-danger" style="padding:4px 8px;font-size:0.7rem;" onclick="deleteItem('berita', ${item.id})">Hapus</button>
             `);
 
             renderList('gambar', db.gambar, item => `
@@ -189,7 +184,7 @@
                     <div class="item-title">${item.title}</div>
                     <div class="item-sub">${item.source}</div>
                 </div>
-                <button class="delete-btn" onclick="deleteItem('gambar', ${item.id})">Hapus</button>
+                <button class="btn btn-danger" style="padding:4px 8px;font-size:0.7rem;" onclick="deleteItem('gambar', ${item.id})">Hapus</button>
             `);
         }
 
@@ -205,15 +200,11 @@
             });
         }
 
-        // SORTABLE JS INIT
         function initSortable() {
             ['semua', 'berita', 'gambar'].forEach(type => {
                 sortables[type] = new Sortable(document.getElementById(`list-${type}`), {
-                    animation: 150,
-                    ghostClass: 'sortable-ghost',
-                    handle: '.drag-handle',
+                    animation: 150, ghostClass: 'sortable-ghost', handle: '.drag-handle',
                     onEnd: function(evt) {
-                        // Update DB order after drag
                         const items = Array.from(evt.to.children).map(el => {
                             const id = parseInt(el.dataset.id);
                             return db[type].find(i => i.id === id);
@@ -225,10 +216,8 @@
             });
         }
 
-        // ADD ITEM
         function addItem(type) {
             const newItem = { id: Date.now() };
-            
             if (type === 'semua') {
                 newItem.title = document.getElementById('s-title').value;
                 newItem.url = document.getElementById('s-url').value;
@@ -251,8 +240,6 @@
             db[type].unshift(newItem);
             saveDB();
             renderAllLists();
-            
-            // Clear inputs
             document.querySelectorAll(`#tab-${type} input, #tab-${type} textarea`).forEach(i => i.value = '');
         }
 
@@ -262,6 +249,28 @@
                 saveDB();
                 renderAllLists();
             }
+        }
+
+        function resetToDefault() {
+            if(confirm('Reset semua data ke default?')) {
+                localStorage.removeItem(DB_KEY);
+                location.reload();
+            }
+        }
+
+        // FITUR DOWNLOAD JSON UNTUK GITHUB
+        function downloadDB() {
+            const dataStr = JSON.stringify(db, null, 2);
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'database.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            alert('File database.json berhasil didownload!\nSilakan upload file ini ke repository GitHub Anda.');
         }
     </script>
 </body>
