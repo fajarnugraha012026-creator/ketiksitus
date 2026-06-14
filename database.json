@@ -1,28 +1,48 @@
 {
   "semua": [
     {
-      "id": 1718000000000,
-      "title": "KARTUTOTO - Raja Situs Slot Gacor Online",
+      "id": 1001,
+      "title": "KARTUTOTO - Raja Situs Slot Gacor Online Terbaru",
       "url": "https://kartutoto.com",
-      "desc": "Situs togel online terpercaya dengan pasaran lengkap dan sistem fair play.",
+      "desc": "Situs togel online terpercaya dengan pasaran lengkap dan RTP live tertinggi.",
       "favicon": "https://via.placeholder.com/32/1a73e8/ffffff?text=K"
+    },
+    {
+      "id": 1002,
+      "title": "TOP1TOTO - Bandar Togel Resmi & Terpercaya",
+      "url": "https://top1toto.com",
+      "desc": "Platform bandar togel resmi dengan sistem keamanan enkripsi terbaru.",
+      "favicon": "https://via.placeholder.com/32/d93025/ffffff?text=T"
     }
   ],
   "berita": [
     {
-      "id": 1718000000001,
-      "category": "PREDIKSI TERBARU",
-      "title": "Prediksi Togel Hari Ini Jitu 100%",
-      "desc": "Analisa mendalam untuk pasaran toto 4D hari ini dengan rumus akurat.",
+      "id": 2001,
+      "category": "PREDIKSI JITU",
+      "title": "Prediksi Kartutoto Hari Ini Bocoran Angka Main",
+      "desc": "Analisa mendalam pola angka untuk pasaran toto 4D hari ini.",
       "thumb": "https://via.placeholder.com/150/1a73e8/ffffff?text=PREDIKSI"
+    },
+    {
+      "id": 2002,
+      "category": "INFO TERBARU",
+      "title": "Top1toto Rilis Fitur Transaksi Super Cepat",
+      "desc": "Update sistem pembayaran instan tanpa potongan admin.",
+      "thumb": "https://via.placeholder.com/150/d93025/ffffff?text=UPDATE"
     }
   ],
   "gambar": [
     {
-      "id": 1718000000002,
-      "title": "Bonus New Member 100%",
+      "id": 3001,
+      "title": "Bonus New Member 100% Kartutoto",
       "source": "kartutoto.com",
-      "img": "https://via.placeholder.com/300x200/1a73e8/ffffff?text=BONUS"
+      "img": "https://via.placeholder.com/300x200/1a73e8/ffffff?text=BONUS+KT"
+    },
+    {
+      "id": 3002,
+      "title": "Promo Cashback Mingguan Top1toto",
+      "source": "top1toto.com",
+      "img": "https://via.placeholder.com/300x200/d93025/ffffff?text=CASHBACK+T1"
     }
   ]
 }
