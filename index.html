@@ -5,14 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KetikSitus - Pencarian Cepat</title>
     <style>
-        :root { --bg:#fff; --text:#202124; --muted:#5f6368; --accent:#1a73e8; --border:#dadce0; --shadow:0 1px 6px rgba(32,33,36,.1); --transition:all .3s cubic-bezier(.4,0,.2,1); }
+        :root { 
+            --bg:#fff; --text:#202124; --muted:#5f6368; --accent:#1a73e8; 
+            --border:#dadce0; --shadow:0 1px 6px rgba(32,33,36,.1); 
+            --transition:all .3s cubic-bezier(.4,0,.2,1); 
+        }
         * { box-sizing:border-box; margin:0; padding:0; outline:none; -webkit-tap-highlight-color:transparent; }
         body { background:var(--bg); color:var(--text); font-family:'Verdana',sans-serif; min-height:100vh; display:flex; flex-direction:column; overflow-x:hidden; }
         
+        /* THEME TOGGLE */
         .theme-toggle { position:fixed; top:20px; right:20px; width:40px; height:40px; border-radius:50%; background:transparent; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:1000; transition:var(--transition); color:var(--muted); }
         .theme-toggle:hover { background:rgba(0,0,0,.05); color:var(--text); }
         .theme-toggle svg { width:24px; height:24px; fill:currentColor; }
 
+        /* HOME VIEW */
         #home-view { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2rem; opacity:1; transform:scale(1); transition:opacity .4s ease, transform .4s ease; }
         #home-view.hidden { opacity:0; transform:scale(.95); pointer-events:none; position:absolute; width:100%; }
         .logo-big { font-size:5rem; font-weight:bold; color:var(--accent); font-style:italic; margin-bottom:3rem; letter-spacing:-3px; user-select:none; text-shadow:0 2px 10px rgba(26,115,232,.1); }
@@ -28,6 +34,7 @@
         .btn-pill { padding:10px 20px; background:#f8f9fa; border:1px solid #f8f9fa; border-radius:4px; color:#3c4043; font-size:.9rem; cursor:pointer; transition:var(--transition); }
         .btn-pill:hover { border-color:#dadce0; box-shadow:0 1px 3px rgba(0,0,0,.1); color:var(--text); }
 
+        /* RESULTS VIEW */
         #results-view { display:none; flex-direction:column; min-height:100vh; opacity:0; transform:translateY(20px); transition:opacity .4s ease, transform .4s ease; }
         #results-view.visible { opacity:1; transform:translateY(0); display:flex; }
         
@@ -51,12 +58,13 @@
         @keyframes slideUpFade { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
         @keyframes fadeIn { from{opacity:0} to{opacity:1} }
 
+        /* RESULT CARDS */
         .result-item { margin-bottom:2.5rem; opacity:0; animation:slideUpFade .5s ease forwards; }
         .r-meta { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
         .r-fav { width:28px; height:28px; border-radius:50%; background:#f1f3f4; display:flex; align-items:center; justify-content:center; font-size:.8rem; font-weight:bold; color:var(--accent); border:1px solid var(--border); }
         .r-site-info { display:flex; flex-direction:column; }
         .r-site { font-size:.9rem; color:var(--text); font-weight:500; }
-        .r-url { font-size:.8rem; color:var(--muted); }
+        .r-url { font-size:.8rem; color:var(--muted); word-break:break-all; }
         .r-title { color:var(--accent); font-size:1.4rem; text-decoration:none; display:block; margin:6px 0 8px; font-weight:normal; line-height:1.3; transition:color .2s; }
         .r-title:hover { text-decoration:underline; color:#1557b0; }
         .r-desc { color:#4d5156; font-size:.95rem; line-height:1.6; }
@@ -87,6 +95,7 @@
         .pag-next { color:var(--accent); text-decoration:none; font-weight:bold; padding:8px 16px; border-radius:20px; transition:background .2s; }
         .pag-next:hover { background:rgba(26,115,232,.1); }
 
+        /* DARK MODE */
         body.dark { --bg:#202124; --text:#e8eaed; --muted:#9aa0a6; --border:#3c4043; --accent:#8ab4f8; --shadow:0 1px 6px rgba(0,0,0,.3); }
         body.dark .search-input-home, body.dark .res-input { background:#303134; border-color:#5f6368; color:white; }
         body.dark .btn-pill { background:#303134; color:#e8eaed; border-color:#303134; }
@@ -114,6 +123,7 @@
         <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
     </button>
 
+    <!-- HOME VIEW -->
     <div id="home-view">
         <div class="logo-big">KetikSitus</div>
         <div class="search-container-home">
@@ -122,11 +132,12 @@
             <span class="btn-clear" id="homeClear" onclick="clearHome()">✕</span>
         </div>
         <div class="home-buttons">
-            <button class="btn-pill" onclick="doSearch()">Temukan</button>
+            <button class="btn-pill" onclick="executeSearch()">Temukan</button>
             <button class="btn-pill" onclick="quickSearch()">Cari Cepat</button>
         </div>
     </div>
 
+    <!-- RESULTS VIEW -->
     <div id="results-view">
         <div class="res-header">
             <div class="logo-small" onclick="goHome()">KetikSitus</div>
@@ -165,172 +176,310 @@
     </div>
 
     <script>
-        const DB_KEY = 'ketiksitus_db_v2';
+        // === STATE MANAGEMENT STRICT ===
+        const DB_KEY = 'ketiksitus_db_v3';
         let db = { semua: [], berita: [], gambar: [] };
         let currentTab = 'semua';
-        let currentQuery = '';
+        let currentQuery = ''; // SINGLE SOURCE OF TRUTH FOR QUERY
+        
+        // DOM Elements Cache
+        const els = {
+            homeView: document.getElementById('home-view'),
+            resultsView: document.getElementById('results-view'),
+            homeInput: document.getElementById('homeInput'),
+            resInput: document.getElementById('resInput'),
+            homeClear: document.getElementById('homeClear'),
+            stats: document.getElementById('statsText'),
+            container: document.getElementById('resultsContainer')
+        };
 
+        // === INITIALIZATION ===
         window.onload = async function() {
             await loadDB();
+            setupEventListeners();
             checkUrlParams();
-            
-            document.getElementById('homeInput').addEventListener('keydown', e => {
-                if(e.key === 'Enter') { e.preventDefault(); doSearch(); }
-            });
-            document.getElementById('homeInput').addEventListener('input', e => {
-                document.getElementById('homeClear').classList.toggle('visible', e.target.value.length > 0);
-            });
-
-            document.getElementById('resInput').addEventListener('keydown', e => {
-                if(e.key === 'Enter') { e.preventDefault(); doSearch(); }
-            });
+            loadTheme();
         };
 
         async function loadDB() {
             const stored = localStorage.getItem(DB_KEY);
-            if (stored) db = JSON.parse(stored);
-            else {
+            if (stored) {
+                db = JSON.parse(stored);
+            } else {
                 try {
                     const res = await fetch('database.json');
-                    if(res.ok) db = await res.json();
-                } catch(e) {}
+                    if (res.ok) db = await res.json();
+                } catch (e) { console.warn('DB Load Failed:', e); }
             }
+        }
+
+        function setupEventListeners() {
+            // Home Input
+            els.homeInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    executeSearch();
+                }
+            });
+            
+            els.homeInput.addEventListener('input', () => {
+                els.homeClear.classList.toggle('visible', els.homeInput.value.length > 0);
+            });
+
+            // Results Input
+            els.resInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    executeSearch();
+                }
+            });
+
+            // Handle Browser Back/Forward
+            window.addEventListener('popstate', (e) => {
+                const q = new URLSearchParams(window.location.search).get('q');
+                if (q) {
+                    syncInputs(q);
+                    showResultsView(q);
+                } else {
+                    showHomeView();
+                }
+            });
         }
 
         function checkUrlParams() {
             const q = new URLSearchParams(window.location.search).get('q');
             if (q) {
-                document.getElementById('homeInput').value = q;
-                document.getElementById('resInput').value = q;
-                showResults(q);
+                syncInputs(q);
+                showResultsView(q);
             }
         }
 
-        function doSearch() {
-            const homeVal = document.getElementById('homeInput').value.trim();
-            const resVal = document.getElementById('resInput').value.trim();
-            const q = homeVal || resVal;
-            if (!q) return;
+        // === CORE SEARCH LOGIC (BUG-FREE) ===
+        function executeSearch() {
+            // 1. Get value from whichever input is active/filled
+            let rawQ = els.homeInput.value.trim() || els.resInput.value.trim();
             
-            document.getElementById('homeInput').value = q;
-            document.getElementById('resInput').value = q;
-            document.getElementById('homeClear').classList.add('visible');
+            // 2. VALIDATION & SANITIZATION
+            if (!rawQ) return;
             
-            window.history.pushState({q: q}, '', `?q=${encodeURIComponent(q)}`);
-            showResults(q);
+            // 3. SYNC ALL INPUTS IMMEDIATELY (Prevent ghost values)
+            syncInputs(rawQ);
+            
+            // 4. UPDATE URL WITHOUT RELOAD
+            const newUrl = `${window.location.pathname}?q=${encodeURIComponent(rawQ)}`;
+            window.history.pushState({ q: rawQ }, '', newUrl);
+            
+            // 5. EXECUTE RENDER
+            showResultsView(rawQ);
         }
 
-        function quickSearch() {
-            const q = prompt("Masukkan kata kunci cepat:");
-            if(q && q.trim()) {
-                document.getElementById('homeInput').value = q.trim();
-                doSearch();
-            }
+        function syncInputs(query) {
+            els.homeInput.value = query;
+            els.resInput.value = query;
+            els.homeClear.classList.toggle('visible', query.length > 0);
         }
 
-        function showResults(query) {
-            currentQuery = query.toLowerCase();
-            document.getElementById('home-view').classList.add('hidden');
-            const results = document.getElementById('results-view');
-            results.style.display = 'flex';
-            setTimeout(() => results.classList.add('visible'), 50);
-            renderTab();
+        function showResultsView(query) {
+            currentQuery = query.toLowerCase().trim();
+            
+            // Smooth Transition
+            els.homeView.classList.add('hidden');
+            els.resultsView.style.display = 'flex';
+            
+            // Force reflow for animation
+            void els.resultsView.offsetWidth; 
+            els.resultsView.classList.add('visible');
+            
+            renderCurrentTab();
         }
 
-        function goHome() {
-            const results = document.getElementById('results-view');
-            results.classList.remove('visible');
+        function showHomeView() {
+            els.resultsView.classList.remove('visible');
+            
             setTimeout(() => {
-                results.style.display = 'none';
-                document.getElementById('home-view').classList.remove('hidden');
-                window.history.pushState({}, '', window.location.pathname);
+                els.resultsView.style.display = 'none';
+                els.homeView.classList.remove('hidden');
+                
+                // Clear inputs when going home
+                els.homeInput.value = '';
+                els.resInput.value = '';
+                els.homeClear.classList.remove('visible');
+                currentQuery = '';
             }, 400);
         }
 
-        function clearHome() { 
-            const inp = document.getElementById('homeInput');
-            inp.value = ''; inp.focus();
-            document.getElementById('homeClear').classList.remove('visible');
-        }
-        
-        function clearRes() { 
-            const inp = document.getElementById('resInput');
-            inp.value = ''; inp.focus();
-            goHome(); 
+        function goHome() {
+            window.history.pushState({}, '', window.location.pathname);
+            showHomeView();
         }
 
+        function clearHome() {
+            els.homeInput.value = '';
+            els.homeInput.focus();
+            els.homeClear.classList.remove('visible');
+        }
+
+        function clearRes() {
+            goHome(); // Clearing in results view goes back home
+        }
+
+        function quickSearch() {
+            const q = prompt("Masukkan kata kunci:");
+            if (q && q.trim()) {
+                syncInputs(q.trim());
+                executeSearch();
+            }
+        }
+
+        // === TAB & RENDER LOGIC ===
         function switchTab(tab, element) {
             currentTab = tab;
+            
+            // Update UI
             document.querySelectorAll('.tab-link').forEach(t => t.classList.remove('active'));
-            if(element) element.classList.add('active');
-            const container = document.getElementById('resultsContainer');
-            container.innerHTML = '';
-            setTimeout(() => renderTab(), 100);
+            if (element) element.classList.add('active');
+            
+            // Re-render with animation reset
+            els.container.innerHTML = '';
+            requestAnimationFrame(() => renderCurrentTab());
         }
 
-        function renderTab() {
-            const container = document.getElementById('resultsContainer');
-            const stats = document.getElementById('statsText');
+        function renderCurrentTab() {
             let data = [];
-            if (currentTab === 'semua') data = filterData(db.semua, ['title','desc','url']);
-            else if (currentTab === 'berita') data = filterData(db.berita, ['title','desc','category']);
-            else if (currentTab === 'gambar') data = filterData(db.gambar, ['title','source']);
+            const fieldsMap = {
+                'semua': ['title', 'desc', 'url'],
+                'berita': ['title', 'desc', 'category'],
+                'gambar': ['title', 'source']
+            };
+            
+            data = filterData(db[currentTab] || [], fieldsMap[currentTab]);
+            
+            // Update Stats
+            els.stats.textContent = `About ${data.length} results (${(Math.random() * 0.3 + 0.1).toFixed(2)} seconds)`;
+            els.stats.style.animation = 'none';
+            void els.stats.offsetWidth; // Trigger reflow
+            els.stats.style.animation = 'fadeIn .5s forwards .2s';
 
-            stats.textContent = `About ${data.length} results (${(Math.random()*0.3+0.1).toFixed(2)} seconds)`;
-            stats.style.animation = 'none'; stats.offsetHeight; stats.style.animation = 'fadeIn .5s forwards .2s';
-
+            // Empty State
             if (data.length === 0) {
-                container.innerHTML = `<div style="text-align:center;padding:4rem;color:#70757a;animation:fadeIn .5s;">Tidak ada hasil untuk "<b>${currentQuery}</b>"</div>`;
+                els.container.innerHTML = `<div style="text-align:center;padding:4rem;color:#70757a;animation:fadeIn .5s;">Tidak ada hasil untuk "<b>${escapeHtml(currentQuery)}</b>"</div>`;
                 return;
             }
 
-            if (currentTab === 'semua') renderSemua(data, container);
-            else if (currentTab === 'berita') renderBerita(data, container);
-            else if (currentTab === 'gambar') renderGambar(data, container);
+            // Render Based on Tab
+            if (currentTab === 'semua') renderSemua(data);
+            else if (currentTab === 'berita') renderBerita(data);
+            else if (currentTab === 'gambar') renderGambar(data);
         }
 
         function filterData(arr, fields) {
             if (!currentQuery) return arr;
-            return arr.filter(item => fields.some(f => (item[f]||'').toLowerCase().includes(currentQuery)));
+            return arr.filter(item => 
+                fields.some(f => (item[f] || '').toLowerCase().includes(currentQuery))
+            );
         }
 
-        function renderSemua(data, container) {
+        // === RENDERERS ===
+        function renderSemua(data) {
+            const frag = document.createDocumentFragment();
             data.forEach((item, i) => {
-                const div = document.createElement('div'); div.className = 'result-item'; div.style.animationDelay = `${i*0.05}s`;
-                div.innerHTML = `<div class="r-meta"><div class="r-fav">${item.title.charAt(0).toUpperCase()}</div><div class="r-site-info"><div class="r-site">${highlight(item.title.split(' ')[0])}</div><div class="r-url">${highlight(item.url)}</div></div></div><a href="${item.url}" target="_blank" class="r-title">${highlight(item.title)}</a><div class="r-desc">${highlight(item.desc)}</div>`;
-                container.appendChild(div);
+                const div = document.createElement('div');
+                div.className = 'result-item';
+                div.style.animationDelay = `${i * 0.05}s`;
+                div.innerHTML = `
+                    <div class="r-meta">
+                        <div class="r-fav">${item.title.charAt(0).toUpperCase()}</div>
+                        <div class="r-site-info">
+                            <div class="r-site">${highlight(item.title.split(' ')[0])}</div>
+                            <div class="r-url">${highlight(item.url)}</div>
+                        </div>
+                    </div>
+                    <a href="${item.url}" target="_blank" rel="noopener" class="r-title">${highlight(item.title)}</a>
+                    <div class="r-desc">${highlight(item.desc)}</div>
+                `;
+                frag.appendChild(div);
             });
+            els.container.appendChild(frag);
         }
 
-        function renderBerita(data, container) {
+        function renderBerita(data) {
+            const frag = document.createDocumentFragment();
             data.forEach((item, i) => {
-                const div = document.createElement('div'); div.className = 'news-card'; div.style.animationDelay = `${i*0.05}s`;
-                div.innerHTML = `<div class="n-content"><div class="n-label"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>${highlight(item.category)}</div><a href="#" class="n-title">${highlight(item.title)}</a><div class="n-desc">${highlight(item.desc)}</div></div><img src="${item.thumb}" class="n-thumb" loading="lazy" onerror="this.src='https://via.placeholder.com/140x90'">`;
-                container.appendChild(div);
+                const div = document.createElement('div');
+                div.className = 'news-card';
+                div.style.animationDelay = `${i * 0.05}s`;
+                div.innerHTML = `
+                    <div class="n-content">
+                        <div class="n-label">
+                            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                            ${highlight(item.category)}
+                        </div>
+                        <a href="#" class="n-title">${highlight(item.title)}</a>
+                        <div class="n-desc">${highlight(item.desc)}</div>
+                    </div>
+                    <img src="${item.thumb}" class="n-thumb" loading="lazy" onerror="this.src='https://via.placeholder.com/140x90'">
+                `;
+                frag.appendChild(div);
             });
+            els.container.appendChild(frag);
         }
 
-        function renderGambar(data, container) {
-            const grid = document.createElement('div'); grid.className = 'img-grid';
+        function renderGambar(data) {
+            const grid = document.createElement('div');
+            grid.className = 'img-grid';
+            
+            const frag = document.createDocumentFragment();
             data.forEach((item, i) => {
-                const card = document.createElement('div'); card.className = 'img-card'; card.style.animationDelay = `${i*0.05}s`;
-                card.innerHTML = `<div class="img-wrap"><img src="${item.img}" loading="lazy" alt="${item.title}"></div><div class="img-title">${highlight(item.title)}</div><div class="img-src">${highlight(item.source)}</div>`;
-                grid.appendChild(card);
+                const card = document.createElement('div');
+                card.className = 'img-card';
+                card.style.animationDelay = `${i * 0.05}s`;
+                card.innerHTML = `
+                    <div class="img-wrap">
+                        <img src="${item.img}" loading="lazy" alt="${escapeHtml(item.title)}">
+                    </div>
+                    <div class="img-title">${highlight(item.title)}</div>
+                    <div class="img-src">${highlight(item.source)}</div>
+                `;
+                frag.appendChild(card);
             });
-            container.appendChild(grid);
+            grid.appendChild(frag);
+            els.container.appendChild(grid);
         }
 
+        // === UTILITIES ===
         function highlight(text) {
             if (!currentQuery || !text) return text || '';
             const safe = currentQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             return text.replace(new RegExp(`(${safe})`, 'gi'), '<mark>$1</mark>');
         }
 
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
         function toggleTheme() {
             document.body.classList.toggle('dark');
-            localStorage.setItem('ks_theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+            const isDark = document.body.classList.contains('dark');
+            localStorage.setItem('ks_theme', isDark ? 'dark' : 'light');
+            updateThemeIcon(isDark);
         }
-        if (localStorage.getItem('ks_theme') === 'dark') document.body.classList.add('dark');
+
+        function loadTheme() {
+            if (localStorage.getItem('ks_theme') === 'dark') {
+                document.body.classList.add('dark');
+                updateThemeIcon(true);
+            }
+        }
+
+        function updateThemeIcon(isDark) {
+            const btn = document.querySelector('.theme-toggle svg');
+            if (isDark) {
+                btn.innerHTML = '<path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/>';
+            } else {
+                btn.innerHTML = '<path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>';
+            }
+        }
     </script>
 </body>
 </html>
